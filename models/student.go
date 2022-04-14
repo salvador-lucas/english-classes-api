@@ -1,9 +1,10 @@
 package models
 
+import "github.com/jinzhu/gorm"
+
 type Student struct {
-	ID       uint     `json:"id" gorm:"primary_key"`
-	Name     string   `json:"name"`
-	Lastname string   `json:"lastname"`
-	Active   bool     `json:"active"`
-	Classes  []string `json:"classes"`
+	gorm.Model
+	Name     string `json:"name"`
+	Lastname string `json:"lastname"`
+	Enabled  bool   `json:"active"`
 }

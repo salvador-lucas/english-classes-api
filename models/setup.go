@@ -12,15 +12,17 @@ import (
 )
 
 func ObtainDbConnection() (*gorm.DB, error) {
-	user := os.Getenv("DB_USER")
-	pass := os.Getenv("DB_PASS")
+	user := os.Getenv("DB_USERNAME")
+	pass := os.Getenv("DB_PASSWORD")
 	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
 
 	if user == "" || pass == "" || host == "" {
 		return nil, errors.New("invalid user/pass/host")
 	}
 
-	connectionURLgo := fmt.Sprintf("%s:%s@(%s)/solar_system_db?parseTime=true", user, pass, host)
+	connectionURLgo := fmt.Sprintf("%s:%s@(%s:%s)/%s?parseTime=true", user, pass, host, port, dbName)
 
 	db, err := gorm.Open("mysql", connectionURLgo)
 	if err != nil {
@@ -28,7 +30,8 @@ func ObtainDbConnection() (*gorm.DB, error) {
 	}
 
 	db.AutoMigrate(&Student{})
-	db.Model(&Student{}).AddForeignKey("solar_system_id", "solar_systems(id)", "RESTRICT", "RESTRICT")
+	db.AutoMigrate(&Classes{})
+	// db.Model(&Classes{}).AddForeignKey("student_id", "students(id)", "RESTRICT", "RESTRICT")
 
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
