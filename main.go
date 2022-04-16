@@ -2,13 +2,15 @@ package main
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/salvador-lucas/english-classes-api/models"
-	// "github.com/salvador-lucas/english-classes-api/models"
+	"github.com/salvador-lucas/english-classes-api/routers"
+	"github.com/salvador-lucas/english-classes-api/utils"
 )
+
+//TODO: obtain logger
 
 func main() {
 	// getting env variables
@@ -17,18 +19,23 @@ func main() {
 		log.Panicln(err)
 	}
 
-	r := gin.Default()
+	engine := gin.Default()
 
 	//connect to database
-	_, err = models.ObtainDbConnection()
+	db, err := models.ObtainDbConnection()
 	if err != nil {
 		// panic(err)
 		log.Panicln(err)
 	}
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"data": "hello world"})
-	})
+	deps := utils.Dependencies{
+		Db:     db,
+		Logger: logger,
+	}
 
-	r.Run()
+	routers.InitializeRouters(engine, deps)
+
+	if err := engine.Run(":8080"); err != nil {
+		panic(err)
+	}
 }
