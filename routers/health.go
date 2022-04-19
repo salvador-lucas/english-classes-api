@@ -8,7 +8,7 @@ import (
 )
 
 func InitializeRouters(engine *gin.Engine, deps utils.Dependencies) {
-	healthController := controllers.HealtController{
+	healthController := controllers.HealthController{
 		ServiceFactory: func() services.HealthService {
 			return services.NewHealthService(deps)
 		},

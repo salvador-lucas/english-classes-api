@@ -1,7 +1,10 @@
 package main
 
 import (
-	"log"
+	"errors"
+	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -10,7 +13,24 @@ import (
 	"github.com/salvador-lucas/english-classes-api/utils"
 )
 
-//TODO: obtain logger
+func obtainLogger() (*log.Logger, error) {
+	logger := log.New()
+	logger.SetOutput(os.Stdout)
+
+	logLevel := os.Getenv("LOG_LEVEL")
+
+	switch logLevel {
+	case "INFO":
+		logger.SetLevel(log.InfoLevel)
+	case "ERROR":
+		logger.SetLevel(log.InfoLevel)
+	case "DEBUG":
+		logger.SetLevel(log.InfoLevel)
+	default:
+		return nil, errors.New("Invalid log level provided")
+	}
+	return logger, nil
+}
 
 func main() {
 	// getting env variables
@@ -25,6 +45,10 @@ func main() {
 	db, err := models.ObtainDbConnection()
 	if err != nil {
 		// panic(err)
+		log.Panicln(err)
+	}
+	logger, err := obtainLogger()
+	if err != nil {
 		log.Panicln(err)
 	}
 

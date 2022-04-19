@@ -8,7 +8,7 @@ import (
 	"github.com/salvador-lucas/english-classes-api/utils"
 )
 
-type HealtController struct {
+type HealthController struct {
 	ServiceFactory func() services.HealthService
 }
 
@@ -17,7 +17,7 @@ type HealtController struct {
 // @Success 201 {object} views.BaseResponse
 // @Failure 503 {object} views.BaseResponse
 // @Router /health [get]
-func (h *HealtController) HealthCheck(ctx *gin.Context) {
+func (h *HealthController) HealthCheck(ctx *gin.Context) {
 	result, errs := h.ServiceFactory().HealthCheck()
 	if len(errs) != 0 {
 		utils.SetResponse(ctx, http.StatusServiceUnavailable, result)
