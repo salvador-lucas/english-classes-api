@@ -16,4 +16,5 @@ func StudentsRoutes(engine *gin.Engine, deps utils.Dependencies) {
 
 	studenGroup := engine.Group("students")
 	studenGroup.GET("/", studentController.GetAllStudents)
+	studenGroup.POST("/", studentController.AddStudent)
 }

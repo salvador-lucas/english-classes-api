@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/jinzhu/gorm"
@@ -11,6 +12,7 @@ import (
 
 type StudentsService interface {
 	GetAllStudents() (*views.GetAllStudentsResponse, *utils.Error)
+	AddStudent(request *views.AddStudentRequest) (*views.AddStudentResponse, *utils.Error)
 }
 
 type studentService struct {
@@ -40,4 +42,32 @@ func (s *studentService) GetAllStudents() (*views.GetAllStudentsResponse, *utils
 		studentsResponse = append(studentsResponse, studentResponse)
 	}
 	return &views.GetAllStudentsResponse{Students: studentsResponse}, nil
+}
+
+func (s *studentService) AddStudent(request *views.AddStudentRequest) (*views.AddStudentResponse, *utils.Error) {
+	student, err := s.createStudent(request)
+	if err != nil {
+		s.logger.Error(err)
+		return nil, err
+	}
+	if err := s.db.Create(student).Error; err != nil {
+		s.logger.Error(err)
+		if err, ok := err.(*mysql.MySQLError); ok && err != nil && err.Number == 1062 {
+			return nil, utils.ErrorInvalid("unable to add new student")
+		}
+		return nil, utils.ErrorInvalid("internal server error")
+	}
+
+	return &views.AddStudentResponse{
+		Name:     student.Name,
+		Lastname: student.Lastname,
+	}, nil
+}
+
+func (s *studentService) createStudent(request *views.AddStudentRequest) (*models.Student, *utils.Error) {
+	return &models.Student{
+		Name:     request.Name,
+		Lastname: request.Lastname,
+		Enabled:  true,
+	}, nil
 }
