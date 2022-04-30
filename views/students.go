@@ -10,11 +10,13 @@ type GetAllStudentsResponse struct {
 }
 
 type AddStudentRequest struct {
-	Name     string `json:"name"`
-	Lastname string `json:"lastname"`
+	Name      string `json:"name"`
+	Lastname  string `json:"lastname"`
+	Cellphone uint   `json:"cellphone"`
 }
 
 type AddStudentResponse struct {
-	Name     string `json:"name"`
-	Lastname string `json:"lastname"`
+	Name      string `json:"name"`
+	Lastname  string `json:"lastname"`
+	Cellphone uint   `json:"cellphone"`
 }

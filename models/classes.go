@@ -2,7 +2,7 @@ package models
 
 import "github.com/jinzhu/gorm"
 
-type Classes struct {
+type Class struct {
 	gorm.Model
 	StudentID uint   `json:"studenId" gorm:"column:id_student;not null"`
 	Day       string `json:"day" gorm:"column:day;not null"`
