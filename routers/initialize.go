@@ -11,4 +11,6 @@ func InitializeRouters(engine *gin.Engine, deps utils.Dependencies) {
 	HealthRoutes(engine, deps)
 	//students
 	StudentsRoutes(engine, deps)
+	//students
+	// PaymentsRoutes(engine, deps)
 }

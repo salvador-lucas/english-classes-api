@@ -32,6 +32,8 @@ func ObtainDbConnection() (*gorm.DB, error) {
 	db.AutoMigrate(&Student{})
 	db.AutoMigrate(&Class{})
 	// db.Model(&Classes{}).AddForeignKey("student_id", "students(id)", "RESTRICT", "RESTRICT")
+	db.AutoMigrate(&Payment{})
+	db.Model(&Payment{}).AddForeignKey("id_student", "students(id)", "RESTRICT", "RESTRICT")
 
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)

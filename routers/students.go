@@ -8,13 +8,14 @@ import (
 )
 
 func StudentsRoutes(engine *gin.Engine, deps utils.Dependencies) {
-	studentController := controllers.StudentController{
+	studentController := controllers.StudentsController{
 		ServiceFactory: func() services.StudentsService {
 			return services.NewStudentService(deps)
 		},
 	}
 
-	studenGroup := engine.Group("students")
-	studenGroup.GET("/", studentController.GetAllStudents)
-	studenGroup.POST("/", studentController.AddStudent)
+	studentsGroup := engine.Group("students")
+	studentsGroup.GET("/", studentController.GetAllStudents)
+	studentsGroup.POST("/", studentController.AddStudent)
+	studentsGroup.POST("/:id/payment", studentController.AddPaymentStudent)
 }
