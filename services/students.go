@@ -16,6 +16,7 @@ type StudentsService interface {
 	GetAllStudents() (*views.GetAllStudentsResponse, *utils.Error)
 	AddStudent(request *views.AddStudentRequest) (*views.AddStudentResponse, *utils.Error)
 	AddStudentPayment(studentID int, request *views.AddPaymentRequest) (*views.AddPaymentResponse, *utils.Error)
+	GetStudentPayments(studentID int) (*views.GetStudentPaymentsResponse, *utils.Error)
 }
 
 type studentService struct {
@@ -85,6 +86,25 @@ func (s *studentService) AddStudentPayment(studenID int, request *views.AddPayme
 		Amount: payment.Amount,
 		Period: payment.Period,
 	}, nil
+}
+
+func (s *studentService) GetStudentPayments(studentID int) (*views.GetStudentPaymentsResponse, *utils.Error) {
+	var studentPayments []models.Payment
+	if err := s.db.Where(&models.Payment{
+		StudentID: uint(studentID),
+	}).Find(&studentPayments).Error; err != nil {
+		s.logger.Error(err)
+		return nil, utils.ErrorInternal(err.Error())
+	}
+	var studentPaymentsResponse []views.AddPaymentResponse
+	for _, payment := range studentPayments {
+		paymentRes := views.AddPaymentResponse{
+			Amount: payment.Amount,
+			Period: payment.Period,
+		}
+		studentPaymentsResponse = append(studentPaymentsResponse, paymentRes)
+	}
+	return &views.GetStudentPaymentsResponse{Payments: studentPaymentsResponse}, nil
 }
 
 // ===//=/=//=== private functions ===//=/=//===

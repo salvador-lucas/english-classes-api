@@ -79,3 +79,25 @@ func (s *StudentsController) AddPaymentStudent(ctx *gin.Context) {
 	}
 	utils.SetResponse(ctx, http.StatusCreated, result)
 }
+
+// GetStudentPayments ...
+// @Get payments from a specific student
+// @Param message body views.GetStudentPaymentsResponse false "Get student payments"
+// @Created 201 {object} views.BaseResponse
+// @Failure 400 {object} views.BaseResponse
+// @Failure 500 {object} views.BaseResponse
+// @Router /students [post]
+func (s *StudentsController) GetStudentPayments(ctx *gin.Context) {
+	studentID, errParam := strconv.Atoi(ctx.Param("id"))
+	if errParam != nil {
+		utils.SetResponse(ctx, http.StatusBadRequest, errParam)
+		return
+	}
+
+	result, err := s.ServiceFactory().GetStudentPayments(studentID)
+	if err != nil {
+		utils.SetResponse(ctx, utils.GetStatusErrorCode(err), err)
+		return
+	}
+	utils.SetResponse(ctx, http.StatusOK, result)
+}

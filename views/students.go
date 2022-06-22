@@ -20,3 +20,18 @@ type AddStudentResponse struct {
 	Lastname  string `json:"lastname"`
 	Cellphone uint   `json:"cellphone"`
 }
+
+//payments
+type AddPaymentRequest struct {
+	Amount float32 `json:"amount"`
+	Period string  `json:"period"`
+}
+
+type AddPaymentResponse struct {
+	Amount float32 `json:"amount"`
+	Period string  `json:"period"`
+}
+
+type GetStudentPaymentsResponse struct {
+	Payments []AddPaymentResponse `json:"payments"`
+}

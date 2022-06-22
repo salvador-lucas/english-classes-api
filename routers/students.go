@@ -18,4 +18,5 @@ func StudentsRoutes(engine *gin.Engine, deps utils.Dependencies) {
 	studentsGroup.GET("/", studentController.GetAllStudents)
 	studentsGroup.POST("/", studentController.AddStudent)
 	studentsGroup.POST("/:id/payment", studentController.AddPaymentStudent)
+	studentsGroup.GET("/:id/payment", studentController.GetStudentPayments)
 }
